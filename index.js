@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Sirve archivos estáticos desde la carpeta /public
-// Ejemplo: http://localhost:3000/index.html carga public/index.html
+// Ejemplo: http://localhost:3000/styles.css carga public/styles.css
 app.use(express.static(path.join(__dirname, "public")));
 
 // Middleware personalizado: registra cada petición en log.txt
