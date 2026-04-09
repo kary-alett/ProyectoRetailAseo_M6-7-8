@@ -1,48 +1,43 @@
-// index.js - Archivo principal del servidor
-// Se eligió "index.js" por convención en proyectos Node.js: es el punto
-// de entrada estándar que npm y Node reconocen automáticamente.
+require('dotenv').config();
+const express = require('express');
+const path = require('path');
 
-// Carga las variables de entorno desde el archivo .env
-require("dotenv").config();
+const { connectDB } = require('./src/config/database');
+const { syncDB } = require('./src/models');
 
-const express = require("express");
-const path = require("path");
-
-// Importamos el router externo con todas las rutas de la aplicación
-const router = require("./routes/router");
-
-// Importamos el middleware de logging personalizado
-const loggerMiddleware = require("./middlewares/logger");
-
-// Creamos la instancia de la aplicación Express
 const app = express();
-
-// ── Middlewares globales ────────────────────────────────────────────────────
-
-// Permite parsear el body de peticiones JSON
-app.use(express.json());
-
-// Permite parsear datos de formularios HTML (urlencoded)
-app.use(express.urlencoded({ extended: true }));
-
-// Sirve archivos estáticos desde la carpeta /public
-// Ejemplo: http://localhost:3000/styles.css carga public/styles.css
-app.use(express.static(path.join(__dirname, "public")));
-
-// Middleware personalizado: registra cada petición en log.txt
-app.use(loggerMiddleware);
-
-// ── Rutas ───────────────────────────────────────────────────────────────────
-
-// Conectamos todas las rutas definidas en router.js
-app.use("/", router);
-
-// ── Iniciar servidor ────────────────────────────────────────────────────────
-
-// Leemos el puerto desde .env; si no existe, usamos 3000 por defecto
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`✅ Servidor iniciado en http://localhost:${PORT}`);
-  console.log(`📁 Entorno: ${process.env.NODE_ENV || "development"}`);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+const logger = require('./middlewares/logger');
+app.use(logger);
+
+app.use('/api/usuarios',   require('./src/routes/userRoutes'));
+app.use('/api/categorias', require('./src/routes/categoryRoutes'));
+app.use('/api/productos',  require('./src/routes/productRoutes'));
+app.use('/api/pedidos',    require('./src/routes/orderRoutes'));
+
+app.use('/', require('./routes/router'));
+
+app.use((req, res) => {
+  res.status(404).json({ status: 'error', message: 'Ruta no encontrada' });
 });
+
+app.use((err, req, res, next) => {
+  console.error('❌ Error global:', err.message);
+  res.status(500).json({ status: 'error', message: err.message || 'Error interno del servidor' });
+});
+
+const startServer = async () => {
+  await connectDB();
+  await syncDB();
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+};
+
+startServer();

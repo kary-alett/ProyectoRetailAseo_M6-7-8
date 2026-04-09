@@ -1,163 +1,233 @@
-# Node & Express Web App
+# 🧴 RetailAseo — Node & Express Web App
 
-Aplicación web backend desarrollada con **Node.js** y **Express** como proyecto integrador del bootcamp Alkemy (Módulos 6, 7 y 8).
-
-Docente: Sabina Romero
-
----
-
-## Tecnologías utilizadas
-
-- **Node.js** v18+
-- **Express.js** v4
-- **dotenv** — variables de entorno
-- **nodemon** — recarga automática en desarrollo
+Proyecto integrador del bootcamp Alkemy — **Módulos 6, 7 y 8**  
+Aplicación web backend para una tienda de artículos de higiene y limpieza.
 
 ---
 
-## Estructura del proyecto
+## 🛠️ Stack técnico
+
+| Tecnología | Rol |
+|---|---|
+| Node.js ≥ 18 | Runtime del servidor |
+| Express.js | Framework HTTP |
+| Sequelize 6 | ORM para PostgreSQL |
+| PostgreSQL | Base de datos relacional |
+| dotenv | Variables de entorno |
+| nodemon | Recarga automática en desarrollo |
+| multer | Subida de archivos (Módulo 8) |
+| bcryptjs | Hash de contraseñas (Módulo 8) |
+| jsonwebtoken | Autenticación JWT (Módulo 8) |
+
+---
+
+## 📁 Estructura del proyecto
 
 ```
-node-express-webapp/
-├── index.js              # Punto de entrada del servidor
-├── package.json
-├── .env                  # Variables de entorno (no se sube a GitHub)
-├── .env.example          # Plantilla de variables de entorno
+ProyectoRetailAseo_M6-7-8/
+├── index.js                   # Punto de entrada del servidor
+├── .env                       # Variables de entorno (NO subir a git)
+├── .env.example               # Plantilla de variables de entorno
 ├── .gitignore
-├── routes/
-│   └── router.js         # Enrutador central (conectado con app.use)
-├── controllers/
-│   ├── homeController.js  # Lógica de la ruta GET /
-│   └── statusController.js# Lógica de la ruta GET /status
-├── middlewares/
-│   └── logger.js         # Registra visitas en logs/log.txt
-├── public/
-│   └── styles.css        # Archivos estáticos servidos por Express
+├── package.json
+├── seed.sql                   # Datos de prueba para poblar la BD
+├── README.md
 ├── logs/
-│   └── log.txt           # Generado automáticamente al ejecutar el servidor
-└── utils/                # Utilidades reutilizables (disponible para módulos 7-8)
+│   ├── log.txt                # Registro de requests HTTP (Módulo 6)
+│   └── transactions.log       # Registro de transacciones fallidas (Módulo 7)
+├── uploads/                   # Imágenes subidas (Módulo 8)
+├── public/                    # Archivos estáticos
+│   └── styles.css
+├── routes/
+│   └── router.js              # Rutas del Módulo 6 (/, /status)
+├── controllers/               # Controladores del Módulo 6
+│   ├── homeController.js
+│   └── statusController.js
+├── middlewares/
+│   └── logger.js              # Logger a archivo plano (Módulo 6)
+└── src/                       # Código del Módulo 7 y 8
+    ├── config/
+    │   ├── database.js        # Conexión Sequelize + PostgreSQL
+    │   └── multer.js          # Configuración de subida de archivos
+    ├── models/
+    │   ├── index.js           # Centraliza modelos y asociaciones
+    │   ├── User.js
+    │   ├── Category.js
+    │   ├── Product.js
+    │   ├── Order.js
+    │   └── OrderItem.js
+    ├── services/
+    │   ├── userService.js
+    │   ├── categoryService.js
+    │   ├── productService.js
+    │   └── orderService.js    # Incluye transaccionalidad
+    ├── controllers/
+    │   ├── userController.js
+    │   ├── categoryController.js
+    │   └── productController.js
+    └── routes/
+        ├── userRoutes.js
+        ├── categoryRoutes.js
+        ├── productRoutes.js
+        └── orderRoutes.js
 ```
 
-### Decisiones de diseño
-
-- **`index.js` como archivo principal:** Se eligió este nombre por convención del ecosistema Node.js. Es el archivo que Node y npm resuelven automáticamente como punto de entrada (`"main"` en `package.json`), lo que facilita que cualquier desarrollador que clone el repositorio entienda dónde arranca la aplicación.
-
-- **Router externo (`routes/router.js`):** Se separó el enrutamiento del archivo principal usando `app.use("/", router)`. Esto mantiene `index.js` limpio y permite agregar nuevos grupos de rutas fácilmente (e.g., `/api/users`) al escalar en los módulos 7 y 8.
-
-- **Carpeta `/utils`:** Incluida desde el inicio para anticipar la escalabilidad. Aquí se agregarán helpers reutilizables (formateo de respuestas, validaciones, etc.) en las siguientes entregas.
-
-- **`/public` para archivos estáticos:** Se usó `express.static()` apuntando a esta carpeta. Se eligió no usar motor de plantillas en esta etapa para mantener el enfoque en los conceptos base de Express; EJS será considerado en módulos siguientes si se requiere contenido dinámico del servidor.
+**Decisión de arquitectura:** se separó el código nuevo en la carpeta `src/` para no romper lo que ya funcionaba del Módulo 6, y se siguió el patrón routes → controllers → services → models para mantener cada capa con una sola responsabilidad.
 
 ---
 
-## Requisitos del sistema
+## ⚙️ Requisitos
 
-- Node.js **v18 o superior**
-- npm v9+
-
-Verificá tu versión con:
-
-```bash
-node -v
-npm -v
-```
+- **Node.js** v18 o superior
+- **PostgreSQL** v14 o superior (corriendo localmente)
 
 ---
 
-## Instalación
+## 🚀 Instalación y ejecución
 
+### 1. Clonar el repositorio
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/node-express-webapp.git
-cd node-express-webapp
+git clone https://github.com/kary-alett/ProyectoRetailAseo_M6-7-8.git
+cd ProyectoRetailAseo_M6-7-8
+```
 
-# 2. Instalar dependencias
+### 2. Instalar dependencias
+```bash
 npm install
-
-# 3. Configurar variables de entorno
-cp .env.example .env
-# Editá .env con tus valores si es necesario
 ```
 
----
-
-## Ejecución
-
+### 3. Configurar variables de entorno
 ```bash
-# Modo producción
-npm start
+cp .env.example .env
+# Editar .env con tu contraseña de PostgreSQL
+```
 
-# Modo desarrollo (con nodemon, recarga automática)
+### 4. Crear la base de datos en PostgreSQL
+```sql
+CREATE DATABASE retail_aseo;
+```
+
+### 5. Iniciar el servidor
+```bash
+# Desarrollo (recarga automática)
 npm run dev
+
+# Producción
+npm start
 ```
 
-### ¿Por qué estos scripts?
+Las tablas se crean automáticamente con `sequelize.sync({ alter: true })` al iniciar.
 
-- `npm start` → usa `node index.js`, el comando estándar para producción.
-- `npm run dev` → usa `nodemon index.js`, que reinicia el servidor automáticamente ante cualquier cambio en el código durante el desarrollo.
-
----
-
-## Rutas disponibles
-
-| Método | Ruta      | Tipo de respuesta | Descripción                          |
-|--------|-----------|-------------------|--------------------------------------|
-| GET    | `/`       | HTML              | Página principal de bienvenida       |
-| GET    | `/status` | JSON              | Estado actual del servidor           |
-
-### Ejemplo de respuesta en `/status`
-
-```json
-{
-  "status": "OK",
-  "message": "El servidor está en funcionamiento",
-  "data": {
-    "app": "Node-Express-WebApp",
-    "entorno": "development",
-    "timestamp": "2025-01-15T14:30:00.000Z",
-    "uptime": "42 segundos"
-  }
-}
+### 6. Cargar datos de prueba (opcional)
+```bash
+psql -U postgres -d retail_aseo -f seed.sql
 ```
 
 ---
 
-## Archivos estáticos
+## 🔌 Endpoints disponibles
 
-La carpeta `/public` es servida automáticamente por Express mediante `express.static()`. Accedés a su contenido directamente desde la URL raíz:
+### Base URL: `http://localhost:3000`
 
-- `http://localhost:3000/styles.css`
+#### Módulo 6 (se mantienen)
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/` | Página principal |
+| GET | `/status` | Estado del servidor |
+
+#### Módulo 7 — API REST
+
+**Usuarios**
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/usuarios` | Listar usuarios (`?nombre=Juan`) |
+| GET | `/api/usuarios/:id` | Ver un usuario |
+| POST | `/api/usuarios` | Crear usuario |
+| PUT | `/api/usuarios/:id` | Actualizar usuario |
+| DELETE | `/api/usuarios/:id` | Eliminar usuario |
+
+**Categorías**
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/categorias` | Listar (`?search=limpieza`) |
+| GET | `/api/categorias/:id` | Ver categoría con sus productos |
+| POST | `/api/categorias` | Crear categoría |
+| PUT | `/api/categorias/:id` | Actualizar categoría |
+| DELETE | `/api/categorias/:id` | Eliminar categoría |
+
+**Productos**
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/productos` | Listar (`?search=&category=&minPrice=&maxPrice=`) |
+| GET | `/api/productos/:id` | Ver producto con categoría |
+| POST | `/api/productos` | Crear producto |
+| PUT | `/api/productos/:id` | Actualizar producto |
+| DELETE | `/api/productos/:id` | Eliminar producto |
+
+**Pedidos**
+| Método | Ruta | Descripción |
+|---|---|---|
+| GET | `/api/pedidos` | Listar todos los pedidos |
+| GET | `/api/pedidos/:id` | Ver pedido con items |
+| POST | `/api/pedidos` | Crear pedido (con transacción) |
+| PUT | `/api/pedidos/:id/estado` | Cambiar estado del pedido |
 
 ---
 
-## Sistema de logging
-
-Cada petición al servidor queda registrada en `logs/log.txt` con el siguiente formato:
+## 📊 Modelo de datos y relaciones
 
 ```
-[15/1/2025] [14:30:00] GET /
-[15/1/2025] [14:30:05] GET /status
-[15/1/2025] [14:30:10] GET /styles.css
+User ──────────── Order          (1:N — un usuario tiene muchos pedidos)
+Category ──────── Product        (1:N — una categoría tiene muchos productos)
+Order ─────────── OrderItem      (1:N — un pedido tiene muchos ítems)
+Product ──────── OrderItem       (N:M — un producto aparece en muchos ítems)
 ```
 
-El middleware `logger.js` usa `fs.appendFile()` para agregar líneas sin sobreescribir el historial. El archivo se crea automáticamente si no existe.
+---
 
-> **Nota:** `log.txt` está en `.gitignore` para no subir datos de uso al repositorio. La carpeta `logs/` se mantiene rastreada mediante un archivo `.gitkeep`.
+## 🔄 Transaccionalidad (Lección 4)
+
+La creación de pedidos usa transacciones de Sequelize para garantizar consistencia:
+
+1. Verifica stock de cada producto
+2. Crea el registro del pedido
+3. Crea cada OrderItem con el precio histórico
+4. Descuenta el stock de cada producto
+
+Si **cualquier paso falla**, se ejecuta un **rollback completo** y se registra el error en `logs/transactions.log`.
 
 ---
 
-## Reflexiones técnicas
+## 🗃️ ORM vs SQL manual
 
-Este módulo estableció los fundamentos del desarrollo backend con Node.js y Express. Los aprendizajes clave fueron:
-
-- La diferencia entre Node puro (bajo nivel, manejo manual de rutas y respuestas) y Express (abstracción que simplifica enormemente el routing y los middlewares).
-- El concepto de **middleware** como función intermediaria en el pipeline de peticiones, que permite modularizar comportamientos transversales como logging, autenticación y validación.
-- La importancia de una **arquitectura modular** desde el inicio: separar rutas, controladores y middlewares hace el código más mantenible y preparado para escalar hacia los módulos 7 (base de datos + ORM) y 8 (API RESTful + JWT).
+Se eligió **Sequelize** porque:
+- Permite definir modelos y relaciones en JavaScript puro
+- Maneja migraciones con `sync({ alter: true })`
+- Soporta transacciones de forma nativa
+- Abstrae las diferencias entre motores de base de datos
+- Evita SQL injection al parametrizar automáticamente las queries
 
 ---
 
-## Próximas etapas
+## 📝 Sistema de logs
 
-- **Módulo 7:** Conexión a base de datos (PostgreSQL/MongoDB), modelos con Sequelize/Mongoose, operaciones CRUD.
-- **Módulo 8:** API RESTful con autenticación JWT, subida de archivos con Multer.
-# Modulo_6_7_8_JS
+**log.txt** — registra cada request HTTP:
+```
+[8/4/2026] [14:30:00] GET /api/usuarios
+[8/4/2026] [14:30:05] POST /api/pedidos
+```
+
+**transactions.log** — registra errores en transacciones:
+```
+[8/4/2026 14:31:00] ERROR TRANSACCIÓN — Stock insuficiente para "Cloro Líquido 1L"
+```
+
+---
+
+## 📎 Entregables por módulo
+
+| Módulo | Contenido |
+|---|---|
+| Parte 1 – Módulo 6 | Servidor, rutas /, /status, logger |
+| Parte 2 – Módulo 7 | BD conectada, CRUD completo, ORM, relaciones, transacciones |
+| Parte 3 – Módulo 8 | JWT, rutas protegidas, subida de archivos |
