@@ -1,7 +1,9 @@
 # 🧴 RetailAseo — Node & Express Web App
 
-Proyecto integrador del bootcamp Alkemy — **Módulos 6, 7 y 8**  
+Proyecto integrador del bootcamp Alkemy — **Módulos 6, 7 y 8**
 Aplicación web backend para una tienda de artículos de higiene y limpieza.
+
+Docente: Sabina Romero
 
 ---
 
@@ -10,7 +12,7 @@ Aplicación web backend para una tienda de artículos de higiene y limpieza.
 | Tecnología | Rol |
 |---|---|
 | Node.js ≥ 18 | Runtime del servidor |
-| Express.js | Framework HTTP |
+| Express.js v4 | Framework HTTP |
 | Sequelize 6 | ORM para PostgreSQL |
 | PostgreSQL | Base de datos relacional |
 | dotenv | Variables de entorno |
@@ -22,15 +24,12 @@ Aplicación web backend para una tienda de artículos de higiene y limpieza.
 ---
 
 ## 📁 Estructura del proyecto
-
-```
 ProyectoRetailAseo_M6-7-8/
 ├── index.js                   # Punto de entrada del servidor
 ├── .env                       # Variables de entorno (NO subir a git)
 ├── .env.example               # Plantilla de variables de entorno
 ├── .gitignore
 ├── package.json
-├── seed.sql                   # Datos de prueba para poblar la BD
 ├── README.md
 ├── logs/
 │   ├── log.txt                # Registro de requests HTTP (Módulo 6)
@@ -46,40 +45,36 @@ ProyectoRetailAseo_M6-7-8/
 ├── middlewares/
 │   └── logger.js              # Logger a archivo plano (Módulo 6)
 └── src/                       # Código del Módulo 7 y 8
-    ├── config/
-    │   ├── database.js        # Conexión Sequelize + PostgreSQL
-    │   └── multer.js          # Configuración de subida de archivos
-    ├── models/
-    │   ├── index.js           # Centraliza modelos y asociaciones
-    │   ├── User.js
-    │   ├── Category.js
-    │   ├── Product.js
-    │   ├── Order.js
-    │   └── OrderItem.js
-    ├── services/
-    │   ├── userService.js
-    │   ├── categoryService.js
-    │   ├── productService.js
-    │   └── orderService.js    # Incluye transaccionalidad
-    ├── controllers/
-    │   ├── userController.js
-    │   ├── categoryController.js
-    │   └── productController.js
-    └── routes/
-        ├── userRoutes.js
-        ├── categoryRoutes.js
-        ├── productRoutes.js
-        └── orderRoutes.js
-```
-
-**Decisión de arquitectura:** se separó el código nuevo en la carpeta `src/` para no romper lo que ya funcionaba del Módulo 6, y se siguió el patrón routes → controllers → services → models para mantener cada capa con una sola responsabilidad.
-
+├── config/
+│   ├── database.js        # Conexión Sequelize + PostgreSQL
+│   └── multer.js          # Configuración subida de archivos
+├── models/
+│   ├── index.js           # Centraliza modelos y asociaciones
+│   ├── User.js
+│   ├── Category.js
+│   ├── Product.js
+│   ├── Order.js
+│   └── OrderItem.js
+├── services/
+│   ├── userService.js
+│   ├── categoryService.js
+│   ├── productService.js
+│   └── orderService.js
+├── controllers/
+│   ├── userController.js
+│   ├── categoryController.js
+│   └── productController.js
+└── routes/
+├── userRoutes.js
+├── categoryRoutes.js
+├── productRoutes.js
+└── orderRoutes.js
 ---
 
-## ⚙️ Requisitos
+## ⚙️ Requisitos del sistema
 
 - **Node.js** v18 o superior
-- **PostgreSQL** v14 o superior (corriendo localmente)
+- **PostgreSQL** v14 o superior
 
 ---
 
@@ -109,38 +104,31 @@ CREATE DATABASE retail_aseo;
 
 ### 5. Iniciar el servidor
 ```bash
-# Desarrollo (recarga automática)
+# Desarrollo
 npm run dev
 
 # Producción
 npm start
 ```
 
-Las tablas se crean automáticamente con `sequelize.sync({ alter: true })` al iniciar.
-
-### 6. Cargar datos de prueba (opcional)
-```bash
-psql -U postgres -d retail_aseo -f seed.sql
-```
+Las tablas se crean automáticamente al iniciar gracias a `sequelize.sync()`.
 
 ---
 
 ## 🔌 Endpoints disponibles
 
-### Base URL: `http://localhost:3000`
-
-#### Módulo 6 (se mantienen)
+### Módulo 6
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/` | Página principal |
 | GET | `/status` | Estado del servidor |
 
-#### Módulo 7 — API REST
+### Módulo 7 — API REST
 
 **Usuarios**
 | Método | Ruta | Descripción |
 |---|---|---|
-| GET | `/api/usuarios` | Listar usuarios (`?nombre=Juan`) |
+| GET | `/api/usuarios` | Listar (`?nombre=Juan`) |
 | GET | `/api/usuarios/:id` | Ver un usuario |
 | POST | `/api/usuarios` | Crear usuario |
 | PUT | `/api/usuarios/:id` | Actualizar usuario |
@@ -150,7 +138,7 @@ psql -U postgres -d retail_aseo -f seed.sql
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/api/categorias` | Listar (`?search=limpieza`) |
-| GET | `/api/categorias/:id` | Ver categoría con sus productos |
+| GET | `/api/categorias/:id` | Ver con sus productos |
 | POST | `/api/categorias` | Crear categoría |
 | PUT | `/api/categorias/:id` | Actualizar categoría |
 | DELETE | `/api/categorias/:id` | Eliminar categoría |
@@ -159,7 +147,7 @@ psql -U postgres -d retail_aseo -f seed.sql
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/api/productos` | Listar (`?search=&category=&minPrice=&maxPrice=`) |
-| GET | `/api/productos/:id` | Ver producto con categoría |
+| GET | `/api/productos/:id` | Ver con su categoría |
 | POST | `/api/productos` | Crear producto |
 | PUT | `/api/productos/:id` | Actualizar producto |
 | DELETE | `/api/productos/:id` | Eliminar producto |
@@ -175,59 +163,30 @@ psql -U postgres -d retail_aseo -f seed.sql
 ---
 
 ## 📊 Modelo de datos y relaciones
-
-```
-User ──────────── Order          (1:N — un usuario tiene muchos pedidos)
-Category ──────── Product        (1:N — una categoría tiene muchos productos)
-Order ─────────── OrderItem      (1:N — un pedido tiene muchos ítems)
-Product ──────── OrderItem       (N:M — un producto aparece en muchos ítems)
-```
+User ──────────── Order       (1:N — un usuario tiene muchos pedidos)
+Category ──────── Product     (1:N — una categoría tiene muchos productos)
+Order ─────────── OrderItem   (1:N — un pedido tiene muchos ítems)
+Product ──────── OrderItem    (N:M — a través de OrderItem)
 
 ---
 
-## 🔄 Transaccionalidad (Lección 4)
+## 🔄 Transaccionalidad
 
-La creación de pedidos usa transacciones de Sequelize para garantizar consistencia:
-
-1. Verifica stock de cada producto
-2. Crea el registro del pedido
-3. Crea cada OrderItem con el precio histórico
-4. Descuenta el stock de cada producto
-
-Si **cualquier paso falla**, se ejecuta un **rollback completo** y se registra el error en `logs/transactions.log`.
-
----
-
-## 🗃️ ORM vs SQL manual
-
-Se eligió **Sequelize** porque:
-- Permite definir modelos y relaciones en JavaScript puro
-- Maneja migraciones con `sync({ alter: true })`
-- Soporta transacciones de forma nativa
-- Abstrae las diferencias entre motores de base de datos
-- Evita SQL injection al parametrizar automáticamente las queries
+La creación de pedidos usa transacciones Sequelize para garantizar consistencia. Si cualquier paso falla se ejecuta un **rollback completo** y el error queda registrado en `logs/transactions.log`.
 
 ---
 
 ## 📝 Sistema de logs
 
-**log.txt** — registra cada request HTTP:
-```
-[8/4/2026] [14:30:00] GET /api/usuarios
-[8/4/2026] [14:30:05] POST /api/pedidos
-```
-
-**transactions.log** — registra errores en transacciones:
-```
-[8/4/2026 14:31:00] ERROR TRANSACCIÓN — Stock insuficiente para "Cloro Líquido 1L"
-```
+- **log.txt** — registra cada request HTTP (Módulo 6)
+- **transactions.log** — registra errores en transacciones de pedidos (Módulo 7)
 
 ---
 
-## 📎 Entregables por módulo
+## 📎 Entregas por módulo
 
 | Módulo | Contenido |
 |---|---|
-| Parte 1 – Módulo 6 | Servidor, rutas /, /status, logger |
-| Parte 2 – Módulo 7 | BD conectada, CRUD completo, ORM, relaciones, transacciones |
-| Parte 3 – Módulo 8 | JWT, rutas protegidas, subida de archivos |
+| Parte 1 – Módulo 6 | Servidor Express, rutas /, /status, middleware logger |
+| Parte 2 – Módulo 7 | BD PostgreSQL, Sequelize, CRUD completo, relaciones, transacciones |
+| Parte 3 – Módulo 8 | JWT, rutas protegidas, subida de archivos con Multer |
