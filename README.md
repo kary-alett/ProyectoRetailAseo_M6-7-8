@@ -183,10 +183,50 @@ La creación de pedidos usa transacciones Sequelize para garantizar consistencia
 
 ---
 
+## 🔐 Autenticación con JWT
+
+### Registro
+- POST `/api/auth/register` — crea un usuario nuevo con contraseña hasheada
+
+### Login
+- POST `/api/auth/login` — devuelve un token JWT
+
+### Uso del token
+En todas las rutas protegidas agrega el header: 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJhZG1pbkByZXRhaWxhc2VvLmNvbSIsInJvbCI6ImFkbWluIiwiaWF0IjoxNzc1Nzg3NTY4LCJleHAiOjE3NzU4NzM5Njh9.BBR-blVkels4Uaf7tdkTtU8w2bjQgfPTT_tFPJ9rhpg
+
+El token expira en **24 horas** (configurable en `.env` con `JWT_EXPIRES_IN`).
+
+### Rutas protegidas 🔒
+| Ruta | Motivo |
+|---|---|
+| GET `/api/auth/me` | Ver perfil propio |
+| GET `/api/pedidos` | Solo usuarios autenticados |
+| POST `/api/pedidos` | Solo usuarios autenticados |
+| PUT `/api/pedidos/:id/estado` | Solo usuarios autenticados |
+| POST `/api/upload/avatar` | Solo usuarios autenticados |
+| POST `/api/upload/producto/:id` | Solo usuarios autenticados |
+
+---
+
+## 📤 Subida de archivos
+
+| Endpoint | Descripción |
+|---|---|
+| POST `/api/upload/avatar` | Sube foto de perfil del usuario |
+| POST `/api/upload/producto/:id` | Sube imagen de un producto |
+
+- Tipos permitidos: jpeg, jpg, png, gif
+- Tamaño máximo: 2 MB
+- Las imágenes se guardan en la carpeta `uploads/`
+- La URL se asocia automáticamente al registro en la base de datos
+
+---
+
 ## 📎 Entregas por módulo
 
 | Módulo | Contenido |
 |---|---|
 | Parte 1 – Módulo 6 | Servidor Express, rutas /, /status, middleware logger |
 | Parte 2 – Módulo 7 | BD PostgreSQL, Sequelize, CRUD completo, relaciones, transacciones |
-| Parte 3 – Módulo 8 | JWT, rutas protegidas, subida de archivos con Multer |
+| Parte 3 – Módulo 8 | JWT, registro/login, rutas protegidas, subida de archivos con Multer |
