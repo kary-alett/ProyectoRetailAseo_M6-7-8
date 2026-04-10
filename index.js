@@ -20,6 +20,8 @@ app.use('/api/usuarios',   require('./src/routes/userRoutes'));
 app.use('/api/categorias', require('./src/routes/categoryRoutes'));
 app.use('/api/productos',  require('./src/routes/productRoutes'));
 app.use('/api/pedidos',    require('./src/routes/orderRoutes'));
+app.use('/api/auth',   require('./src/routes/authRoutes'));
+app.use('/api/upload', require('./src/routes/uploadRoutes'));
 
 app.use('/', require('./routes/router'));
 
