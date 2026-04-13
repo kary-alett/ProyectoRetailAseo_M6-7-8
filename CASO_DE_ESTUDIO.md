@@ -144,4 +144,4 @@ Además, el proyecto demuestra capacidad de aprendizaje progresivo: cada módulo
 ---
 
 *Portafolio desarrollado como parte del Bootcamp Full Stack JavaScript Trainee — Alkemy 2026*  
-*Contacto: [GitHub](https://github.com/kary-alett) | [LinkedIn](https://linkedin.com/in/karina-trujillo)*
+*Contacto: [GitHub](https://github.com/kary-alett) | [LinkedIn](https://www.linkedin.com/in/karina-trujillo-trujillo/)
